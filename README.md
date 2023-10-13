@@ -1,3 +1,3 @@
-### Домашняя работа №1
+### Домашняя работа №2
 
-[Онлайн превью](https://react-traineeship.vercel.app/)
+[Онлайн превью](https://react-traineeship-iv5ezol1u-timurkazan99.vercel.app/)
