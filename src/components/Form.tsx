@@ -1,39 +1,35 @@
 import React, {Component} from 'react';
+import {debounce} from "../utils/debounce";
 
-type FormProps = {}
+type FormProps = {
+  textInputRef?: React.Ref<HTMLInputElement>;
+  submitHandler: React.FormEventHandler<HTMLFormElement>
+}
 
 type FormState = {
   text: string,
+  disabled: boolean
 }
 
 class Form extends Component<FormProps, FormState> {
-  protected textInputRef: React.RefObject<HTMLInputElement>;
-
-  private formStyle: React.CSSProperties = {
-    width: '300px',
-    marginTop: '20px',
-  }
-
-  private inputStyle: React.CSSProperties = {
-    width: '100%',
-    height: '50px',
-    border: '1px solid #000',
-    borderRadius: '20px',
-    padding: '15px',
-    boxSizing: 'border-box'
-  }
 
   constructor(props: FormProps) {
     super(props);
     this.state = {
-      text: ''
+      text: '',
+      disabled: false
     }
-    this.textInputRef = React.createRef();
-    this.changeHandler = this.changeHandler.bind(this);
+
+    const bindedChangeHandler = this.changeHandler.bind(this);
+    this.changeHandler = debounce(bindedChangeHandler, 500);
   }
 
   componentDidMount() {
-    this.textInputRef?.current?.focus();
+    console.log(this.props.textInputRef);
+    if (typeof this.props.textInputRef !== 'function') {
+      this.props.textInputRef?.current?.focus();
+    }
+
     console.log('Form did mount');
   }
 
@@ -46,18 +42,25 @@ class Form extends Component<FormProps, FormState> {
   }
 
   changeHandler(e: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ text: e.target.value });
+    const newText = e.target.value;
+    this.setState({ text: newText, disabled: newText === 'реакт' });
   }
 
   render() {
     return (
-      <form style={this.formStyle}>
+      <form className='form' onSubmit={this.props.submitHandler}>
         <input
+          className='input'
           type='text'
+          name='text'
           placeholder='Напиши что-нибудь'
           onChange={this.changeHandler}
-          ref={this.textInputRef}
-          style={this.inputStyle}
+          ref={this.props.textInputRef}
+        />
+        <input
+          className='button'
+          type='submit'
+          disabled={this.state.disabled}
         />
       </form>
     );

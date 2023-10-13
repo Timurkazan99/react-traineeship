@@ -1,22 +1,16 @@
 import React, {Component} from 'react';
 
 type ButtonProps = {
-  show: boolean,
-  clickHandler: React.MouseEventHandler<HTMLButtonElement>
+  show?: boolean,
+  clickHandler: React.MouseEventHandler<HTMLButtonElement>,
+  title: string,
+  altTitle?: string,
 }
 
 class Button extends Component<ButtonProps> {
 
-  private style: React.CSSProperties = {
-    width: '300px',
-    height: '50px',
-    border: '1px solid #000',
-    borderRadius: '20px',
-    cursor: 'pointer'
-  }
-
   static defaultProps = {
-    show: true
+    show: true,
   };
 
   componentDidMount() {
@@ -32,10 +26,10 @@ class Button extends Component<ButtonProps> {
   }
 
   render() {
-    const text = this.props.show ? 'Скрыть' : 'Показать';
+    const text = this.props.show ? this.props.title : this.props.altTitle;
     return (
       <button
-        style={this.style}
+        className='button'
         onClick={this.props.clickHandler}
       >
         {text}
